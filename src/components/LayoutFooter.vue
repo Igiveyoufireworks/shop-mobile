@@ -6,7 +6,7 @@
     >
       首页
     </van-tabbar-item>
-    <van-tabbar-item
+    <!-- <van-tabbar-item
       to="/category"
       icon="apps-o"
     >
@@ -17,7 +17,7 @@
       icon="gift-o"
     >
       推荐
-    </van-tabbar-item>
+    </van-tabbar-item> -->
     <van-tabbar-item
       to="/cart"
       icon="cart-o"

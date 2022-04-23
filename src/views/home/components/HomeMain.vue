@@ -16,11 +16,16 @@
       </van-swipe-item>
     </van-swipe>
     <!-- 区域2: 菜单列表 -->
-    <van-grid icon-size="35">
+    <!-- <van-grid icon-size="35">
       <van-grid-item
         v-for="(item, index) in menuData"
         :key="index"
         :icon="item.img" :text="item.info[0].value" />
+    </van-grid> -->
+    <van-grid :column-num="2" icon-size="35">
+      <van-grid-item icon="https://shop.fed.lagounews.com/uploads/attach/2021/09/20210913/1bbef51573c3ce0f23d96f57921de6ee.jpg" text="商品分类" to="/category" />
+      <van-grid-item icon="https://shop.fed.lagounews.com/uploads/attach/2021/09/20210913/24f58b20ebf8c9d6b91f15ccd383ab9d.jpg" text="我的收藏" to="/collect" />
+      <!-- <van-grid-item icon="https://shop.fed.lagounews.com/uploads/attach/2021/09/20210913/21a085a9f6dee57e17e36c2a91c04278.jpg" text="新品上架" to="/" /> -->
     </van-grid>
     <!-- 区域3: 公告栏 -->
     <van-notice-bar left-icon="volume-o" :scrollable="false">
@@ -106,7 +111,7 @@ const initProductsData = async () => {
   // 请求每次得到的是新一段数据，需要将新数据添加到productsData中, 而不是直接赋值
   productsData.value.push(...data.data)
 
-  // 将本次加载状态更改为完成
+  // 将本次加载状态更改为完成 加载状态结束
   loading.value = false
 
   // 判断是否已经加载完全部数据

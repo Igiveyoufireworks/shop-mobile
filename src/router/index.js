@@ -76,6 +76,12 @@ const routes = [
     props: true
   },
   {
+    path: '/comment-new',
+    name: 'comment-new',
+    component: () => import('@/views/commentNew/index.vue')
+    // props: true
+  },
+  {
     path: '/recommend',
     name: 'recommend',
     component: () => import('@/views/recommend/index.vue')
@@ -87,9 +93,15 @@ const routes = [
     meta: { requireAuth: true }
   },
   {
-    path: '/search',
+    path: '/search/:kw',
     name: 'search',
-    component: () => import('@/views/search/index.vue')
+    component: () => import('@/views/search/index.vue'),
+    props: true
+  },
+  {
+    path: '/collect',
+    name: 'collect',
+    component: () => import('@/views/collect/index.vue')
   },
   {
     path: '/:pathMatch(.*)*',

@@ -3,7 +3,8 @@ import axios from 'axios'
 import store from '@/store'
 import router from '@/router'
 const request = axios.create({
-  baseURL: 'https://shop.fed.lagounews.com/api'
+  // baseURL: 'https://shop.fed.lagounews.com/api'
+  baseURL: 'http://42.194.198.144:8080'
 })
 
 // 在请求拦截器中进行token设置

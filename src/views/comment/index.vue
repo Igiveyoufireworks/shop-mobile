@@ -1,9 +1,12 @@
 <template>
   <van-cell-group class="comment">
     <!-- 总体评价情况 -->
-    <van-cell
+    <van-nav-bar
+      left-text="返回"
+      left-arrow
       title="商品评价"
       :value="`好评率${ state.replyChance }%`"
+      @click-left="onClickLeft"
     />
     <!-- 标签切换区域 -->
     <van-cell class="tags">
@@ -48,6 +51,8 @@
 import { getCommentCount, getCommentByTag } from '@/api/product'
 import { computed, reactive } from 'vue'
 import CommentItem from '@/components/CommentItem.vue'
+
+const onClickLeft = () => history.back()
 
 const { productId } = defineProps({
   productId: {

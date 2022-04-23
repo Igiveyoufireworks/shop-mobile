@@ -223,6 +223,7 @@ const convertData = data => {
 // - 请求数据
 const initAddressList = async () => {
   const { data } = await getAddressList({ limit: 5, page: 1 })
+  console.log(data)
   if (data.status !== 200) { return }
   addressList.value = convertData(data.data)
 }
@@ -259,12 +260,17 @@ const cartInfo = computed(() => orderConfirmData.value?.cartInfo)
 const cartItemCount = computed(() => `共${cartInfo.value?.length || 0}件`)
 const totalPrice = computed(() => (orderConfirmData.value?.priceGroup?.totalPrice || 0) * 100)
 // 接收组件传参（cartID在前面引入过）
-
-const initOrderInfo = async () => {
+// 判断订单类型
+const orderType = ref(0)
+if (history.state.back !== '/cart') {
+  orderType.value = ref(1)
+}
+const initOrderInfo = async (orderType) => {
   const { data } = await confirmOrder({
     cartId,
-    new: 0 // 表示是一个新建订单的操作
+    new: orderType // 表示是一个新建订单的操作
   })
+  console.log(data)
   if (data.status !== 200) return
   orderConfirmData.value = data.data
 }

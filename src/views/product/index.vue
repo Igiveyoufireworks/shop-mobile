@@ -145,10 +145,10 @@
   <van-action-bar>
     <van-action-bar-icon icon="chat-o" text="客服" color="#ee0a24" />
     <van-action-bar-icon icon="cart-o" text="购物车" to="/cart"/>
-    <van-action-bar-icon icon="star" text="已收藏" color="#ff5000" />
+    <van-action-bar-icon icon="star-o" text="收藏" @click="handelCollectAdd" />
     <van-action-bar-button type="warning" text="加入购物车" @click="handelCartAdd"/>
-    <van-action-bar-button type="danger" text="立即购买" />
-</van-action-bar>
+    <van-action-bar-button type="danger" text="立即购买" @click="handelBuy"/>
+  </van-action-bar>
 </template>
 <script setup>
 import { onBeforeRouteUpdate, useRouter } from 'vue-router'
@@ -161,6 +161,7 @@ import { reactive } from 'vue'
 import { useStore } from 'vuex'
 import { addToCart } from '@/api/cart'
 import { Toast } from 'vant'
+import { addToCollect, cancelCollect } from '../../api/collect'
 const store = useStore()
 const router = useRouter()
 
@@ -250,7 +251,7 @@ const handelTagChange = (tag, specIndex) => {
 
 // --- 加入购物车 ---
 // 加入购物车按钮点击事件
-const handelCartAdd = async() => {
+const handelCartAdd = async () => {
   // 检查用户登录状态
   if (!store.state.user) {
     return router.push({
@@ -278,9 +279,78 @@ const handelCartAdd = async() => {
   specState.show = false
   Toast('加入购物车成功')
 }
+// --- 立即购买 ---
+const handelBuy = async () => {
+  // 检查用户登录状态
+  if (!store.state.user) {
+    return router.push({
+      name: 'login',
+      query: {
+        redirect: router.currentRoute.value.fullPath
+      }
+    })
+  }
+  // 检测弹出层是否显示
+  if (!specState.show) {
+    return specState.show = true
+  }
+
+  // 发送请求，立即购买，跳转订单页
+  const { data } = await addToCart({
+    // 请求参数
+    new: 1,
+    productId,
+    uniqueId: specDetail.value.unique,
+    cartNum: specState.buyCount
+  })
+  console.log(data)
+  if (data.status !== 200) { return }
+  // 隐藏弹出层
+  specState.show = false
+  router.push({
+    name: 'order-confirm',
+    // cartId 指的是要结算的所有 sku 的集合，以逗号连接后传递即可
+    params: {
+      cartId: data.data.cartId
+    }
+  })
+}
+
+// --- 收藏 ---
+let status = true
+const p = document.getElementsByClassName('van-action-bar-icon')
+const handelCollectAdd = async () => {
+  if (status) {
+    status = false
+    // console.log(p[2])
+    // console.log(p[2].childNodes[0])
+    // 加入收藏
+    const { data } = await addToCollect(productId)
+    console.log(data)
+    p[2].childNodes[0].classList.replace('van-icon-star-o', 'van-icon-star')
+    p[2].childNodes[1].data = '已收藏'
+    Toast.success('已加入收藏')
+  } else {
+    status = true
+    // 取消收藏
+    const { data } = await cancelCollect(productId)
+    console.log(data)
+    p[2].childNodes[0].classList.replace('van-icon-star', 'van-icon-star-o')
+    p[2].childNodes[1].data = '收藏'
+    Toast('取消收藏')
+  }
+}
+
 </script>
 
 <style lang="scss" scoped>
+:deep(.van-icon-star:before) {
+  content: '\e727';
+  color: #ff5000;
+}
+:deep(.van-icon-star-o:before){
+  content: '\e722'
+}
 // 为了避免问题，添加fixed样式权重
 .van-nav-bar {
   position: fixed !important;
@@ -473,4 +543,8 @@ const handelCartAdd = async() => {
     z-index: 10000;
     width: 100%;
   }
+  // .van-tabbar {
+  //   z-index: 10000;
+  //   width: 100%;
+  // }
 </style>

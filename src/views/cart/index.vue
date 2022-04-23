@@ -40,7 +40,7 @@ const hasItem = computed(() => cartList.value.length !== 0)
 // 初始化购物车数据
 const initCartList = async () => {
   const { data } = await getCartList()
-  // console.log(data)
+  console.log(data)
   if (data.status !== 200) { return }
 
   // 请求到新数据后，将原始数据清空，随后更新为新数据
